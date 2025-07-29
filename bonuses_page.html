@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com/" ><link rel="dns-prefetch" href="https://www.googletagmanager.com/" >
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-995817039"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-995817039');
+//  gtag('config', 'UA-4740199-1');
+    gtag('config', 'G-QTXESFVRHD');
+</script>    <title>Онлайн хокеен мениджър | Hockey Arena</title><meta name="description" content="Онлайн хокейна игра за най-добрите мениджъри. Безплатно е !" /><meta name='keywords' content='хокей, мениджър, онлайн, спорт, бой, игра' />
+    <link rel="shortcut icon" href="https://www.hockeyarena.net/images/60/fav13.png" />
+    <link href="https://fonts.googleapis.com/css?family=Asap|Asap+Condensed&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+    <meta http-equiv='Content-Language' content='bg_BG' />
+    <meta name='googlebot' content='index,follow,snippet,archive' />
+    <meta name='robots' content='index,follow' />
+    <link rel="stylesheet" type="text/css" href="https://www.hockeyarena.net/styles60.css?bu=233" media="screen" />
+
+    <link rel="stylesheet" type="text/css" href="https://www.hockeyarena.net/styles60mobile.css?bu=233" />
+    <link rel="stylesheet" type="text/css" href="https://www.hockeyarena.net/styles60normal.css?bu=233" />
+        
+
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+
+    
+    <style>
+
+        
+        
+    </style>
+
+    <script>
+                const ABSOLUTE_PATH = "https://www.hockeyarena.net/";
+                
+        $(document).ready(function() {
+            $(".lineInfo").on("contextmenu",function(){
+                return false;
+            });
+        });
+        
+    </script>
+</head>
+<body>
+<!--HA 6.0 template-->
+
+<header class="header">
+    <div class="inner">
+        <a href="https://www.hockeyarena.net/"><img class="logo" src="https://www.hockeyarena.net/images/n/email_banner.png"></a>
+        <div class="noSelect menuToggle" data-toggle="offmenu">
+            <div class="iconBar"></div>
+            <div class="iconBar"></div>
+            <div class="iconBar"></div>
+        </div>
+        <nav class="topMenu">
+            <div id="sddm1" class="">
+                                                                                                                <span class="item">
+<select name="multit" onchange="document.location.href=this.options[this.selectedIndex].value;">
+        <option value="index.php?p=sponsor_multiteam.inc&a=switch&team=1&ru=aHR0cDovL3d3dy5ob2NrZXlhcmVuYS5uZXQvYmcvaW5kZXgucGhwP3A9bWFuYWdlcl9sZWFndWVfYm9udXNlcy5waHA=" selected>A отбор</option><option value="index.php?p=sponsor_multiteam.inc&a=switch&team=3&ru=aHR0cDovL3d3dy5ob2NrZXlhcmVuYS5uZXQvYmcvaW5kZXgucGhwP3A9bWFuYWdlcl9sZWFndWVfYm9udXNlcy5waHA=">A U23</option><option value="index.php?p=sponsor_multiteam.inc">B отбор</option>
+</select>
+        &nbsp;&nbsp;<img src='https://www.hockeyarena.net/images/60/moneygold-24.png' class='icon' alt='Ниво на парите'>&nbsp;<a href='index.php?p=manager_finance_report.inc' title='Ниво на парите'><span class='cashS'>346 570 230</span></a></span><span class="item">&nbsp;&nbsp;&nbsp;<img src='https://www.hockeyarena.net/images/60/clock-8-24.png' class='icon'>&nbsp;
+<script type="text/javascript">
+function Do(number)
+{
+    return (number < 10) ? '0' + number : number;
+}
+
+function DoMes(number)
+{
+    number = number + 1
+    return (number < 10) ? '0' + number : number;
+}
+
+function CasRozdiel()    
+{
+    var timeDifferense;
+    var serverClock = new Date(2025,6,29,23,58,23);
+    var clientClock = new Date();
+    var serverSeconds;
+    var clientSeconds;
+
+    CasRozdiel = clientClock.getTime() - serverClock.getTime() - 3000;
+    SpuHod(CasRozdiel);
+}
+
+function SpuHod(CasRozdiel)
+{
+    var now = new Date();
+    var newTime;    
+    var txt;
+    
+    newTime = now.getTime() - CasRozdiel;
+
+    now.setTime(newTime);
+
+    //txt = Do(now.getHours()) + ':' + Do(now.getMinutes()) + ':' + Do(now.getSeconds()) + ' ' + now.getFullYear() + '-' + DoMes(now.getMonth()) + '-' + Do(now.getDate());
+    txt = Do(now.getDate()) + '.' + DoMes(now.getMonth()) + '., ' + Do(now.getHours()) + ':' + Do(now.getMinutes()) + ':' + Do(now.getSeconds());
+//    txt = '' + Do(now.getHours()) + ':' + Do(now.getMinutes()) + ':' + Do(now.getSeconds());
+    //txt = Do(now.getHours()) + ':' + Do(now.getMinutes()) + ':' + Do(now.getSeconds());
+    document.getElementById('hodiny').innerHTML = txt;
+//    document.getElementById('hodiny1').innerHTML = txt;
+
+    setTimeout('SpuHod(CasRozdiel)',1000);
+}
+</SCRIPT>
+<span id='hodiny' style='font-weight:bold;'></span></span><span class="item">&nbsp;&nbsp;&nbsp;
+<script type="text/javascript" src="https://www.hockeyarena.net/private/jquery.plugin.min.js"></script>
+<script type="text/javascript" src="https://www.hockeyarena.net/private/jquery.countdown1.min.js"></script>
+            <a href='index.php?p=manager_achievements.inc&action=current' class='events'><img src='https://www.hockeyarena.net/pics/assign.png' class='icon' title='30.07.2025, 09:00 - Задачи'></a>&nbsp;<span id='evdown' class='rb'></span><a href='index.php?p=manager_youth_school_form.php' class='events'><img src='https://www.hockeyarena.net/pics/graduate.png' class='icon' title='30.07.2025, 12:00 - МШ'></a><a href='index.php?p=manager_match_setup_form.php&match_id=908736140' class='events'><img src='https://www.hockeyarena.net/pics/whistle1.png' class='icon' title='31.07.2025, 20:00 - Мач'></a><script type='text/javascript'>
+            $('#evdown').countdown({until: +32497, compact: true, 
+    format: 'HMS', description: ''});
+</script>
+            </span><span class="item">
+    <a href="#" onclick="mopen('m2');"
+        onmouseover="myTimer=setTimeout('mo2()', 250);" 
+        onmouseout="clearTimeout(myTimer);mclosetime();"><img src='https://www.hockeyarena.net/pics/list1.png' class='evi'></a>
+            <div id="m2" onmouseover="mcancelclosetime()" onmouseout="mclosetime()" onclick='mclose();'>
+            
+        <a href='javascript: void(0)' style='text-transform:uppercase; cursor:default;'><b>Списък на предстоящите събития:</b></a>
+        
+                <a href='index.php?p=manager_achievements.inc&action=current'>30.07.2025, 09:00 - Недовършени мениджър задачи</a>
+                
+                <a href='index.php?p=manager_youth_school_form.php'>30.07.2025, 12:00 - Нов играч в младежката ни школа</a>
+                
+                <a href='index.php?p=manager_match_setup_form.php&match_id=908736140'>31.07.2025, 20:00 - Мач - Varna Furys vs Speed boy B</a>
+                
+                <a href='index.php?p=manager_national_election_details.php&id=4894'>02.08.2025, 00:00 - Избори за мениджър на националния отбор</a>
+                
+                <a href='index.php?p=public_player_info.inc&player_id=14999269'>04.08.2025, 21:50 - Играчът очаква оферта от текущия му отбор - Gary Linighan</a>
+                
+                <a href='index.php?p=manager_calendar.php&x=0&start_stamp=1757696400'>16.09.2025, 19:00 - Край на редовното време</a>
+                
+                <a href='index.php?p=manager_youth_school_form.php'>01.10.2025, 00:00 - Краен срок на драфта</a>
+                
+                <a href='index.php?p=manager_calendar.php&x=0&start_stamp=1759251600'>04.10.2025, 19:00 - Край на сезона</a>
+                
+            </div>
+            </span>            </div>
+
+            <ul class="" id="sddm">
+                <li>
+    <a href="#" onclick="mopen('m1');"
+        onmouseover="myTimer=setTimeout('mo1()', 250);" 
+        onmouseout="clearTimeout(myTimer);mclosetime();"><span class='hide'>Бързи връзки</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/hotlinks-24.png' style='height: 15px; margin-top: 4px;'></a>
+        <div id="m1" onmouseover="mcancelclosetime()" onmouseout="mclosetime()" onclick='mclose();'>
+        
+    <a href='index.php?p=hotlinks.php&action=list'>Добави&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        
+        </div>
+<script type='text/javascript'>
+
+var timeout    = 250;
+var closetimer    = 0;
+var ddmenuitem    = 0;
+
+function mo1() {
+    mopen('m1');
+}
+function mo2() {
+    mopen('m2');
+}
+
+// open hidden layer
+function mopen(id)
+{    
+    //var id;
+    //id = 'm1';
+    // cancel close timer
+    mcancelclosetime();
+
+    // close old layer
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+
+    // get new layer and show it
+    ddmenuitem = document.getElementById(id);
+    ddmenuitem.style.visibility = 'visible';
+
+}
+// close showed layer
+function mclose()
+{
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+}
+
+// go close timer
+function mclosetime()
+{
+    closetimer = window.setTimeout(mclose, timeout);
+}
+
+// cancel close timer
+function mcancelclosetime()
+{
+    if(closetimer)
+    {
+        window.clearTimeout(closetimer);
+        closetimer = null;
+    }
+}
+
+// close layer when click-out
+//document.onclick = mclose; 
+</script>
+            </li><li><a href='index.php?p=manager_news.php' title='Новини'><span class='hide'>Новини</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/home-24.png' style='height: 16px; margin-top: 4px;'></a></li><li><a href='index.php?p=manager_calendar.php' title='Календар'><span class='hide'>Календар</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/cal-5-24.png' style='height: 15px; margin-top: 4px;'></a></li><li><a href='index.php?p=manager_lines_lineup_form_new.php' title='Състав'><span class='hide'>Състав</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/lines-24.png'></a></li><li><a href='index.php?p=manager_training_form1.php' title='Тренировка'><span class='hide'>Тренировка</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/tra-24.png'></a></li><li><a href='index.php?p=manager_youth_school_form.php' title='Младежка школа'><span class='hide'>МШ<span style='font-size: 0.8em;'>(1)</span></span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/ys-24red.png' style='height: 20px; margin-top: 4px;'></a></li><li><a href='index.php?p=manager_player_market_form.php' title='Пазар'><span class='hide'>Пазар</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/market-24.png'></a></li><li><a href='index.php?p=manager_discussion_detail.php' title='Дискусия'><span class='hide'>Дискусия</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/forum-1-24.png' style='margin-top: 6px;'></a></li><li><a href='index.php?p=manager_mail.php' title='Поща'><span class='hide'>Поща</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/mail-24.png' style='height: 15px; margin-top: 4px;'></a></li><li><a href='index.php?p=security_logoff.php' title='Изход'><span class='hide'>Изход</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/power-3-24.png' style='height: 15px; margin-top: 4px;'></a></li><li><a href='index.php?p=manager_search_form.php' title='Търси'><span class='hide'>Търси</span><img class='vxyzzz' src='https://www.hockeyarena.net/images/60/search-24.png' style='height: 15px; margin-top: 4px;'></a></li>            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="page" >
+    <div class="wrapper">
+
+        <div class="colCon">
+
+            <div class="leftCol">
+
+                
+                <script>
+                    $( function () {
+
+                        $( 'body' ).on( 'click', '.dropdown-btn', function() {
+                            var cls = $( this ).data('submenu');
+                            // console.log(cls);
+
+                            if ($('div.' + cls).css('display') == 'block') {
+                                // if the clicked submenu is already active just close it
+                                $('div.' + cls).css({
+                                    'display': 'none',
+                                });
+                            }
+                            else {
+                                // close all submenus
+                                $('div.sub').css({
+                                    'display': 'none',
+                                });
+                                // display newly clicked submenu
+                                $('div.' + cls).css({
+                                    'display': 'block',
+                                });
+                            }
+
+                        });
+
+                        $('[data-toggle=offmenu]').click(function() {
+                            $('.leftCol').toggleClass('active');
+                        });
+
+                        
+                        CasRozdiel();                        
+                    });
+                </script>
+                
+                <nav class="menuLeft">
+                                            <a data-submenu="submpublic" class=" dropdown-btn  head"  onclick="return false;" href="index.php?smenu=mpublic">Home</a>
+                                                    <div class="sub  submpublic">
+                                                            <a class="level1" href="index.php?p=public_home1.inc">За нас</a>
+                                                            <a class="level1" href="index.php?p=public_ha_news.php">Новини</a>
+                                                            <a class="level1" href="index.php?p=public_rules_new.php">Правила</a>
+                                                            <a class="level1" href="index.php?p=public_guide60.inc">Ръководство</a>
+                                                            <a class="level1" href="index.php?p=public_faq.php">ЧЗВ</a>
+                                                            <a class="level1" href="index.php?p=public_credits.php">HA отбор</a>
+                                                            <a class="level1" href="index.php?p=public_ads.php">Реклама</a>
+                                                        </div>
+                                                                    <a data-submenu="submliga" class=" dropdown-btn "  onclick="return false;" href="index.php?smenu=mliga">Лига</a>
+                                                    <div class="sub active submliga">
+                                                            <a class="level1" href="index.php?p=public_standings.inc">Таблици</a>
+                                                            <a class="level1" href="index.php?p=manager_tourney_details_form.php&inst_id=218309">Плейоф/Плейаут</a>
+                                                            <a class="level1" href="index.php?p=manager_league_bonuses.php">Бонуси</a>
+                                                            <a class="level1" href="index.php?p=manager_league_statistics.php&type=sco">Статистика</a>
+                                                            <a class="level1" href="index.php?p=manager_league_matches.php">Мачове</a>
+                                                            <a class="level1" href="index.php?p=sponsor_league_injured_players.php">Играчи</a>
+                                                            <a class="level1" href="index.php?p=manager_tourney_selection_form.php">Турнири</a>
+                                                            <a class="level1" href="index.php?p=manager_tourney_details_form.php&inst_id=218960">Национална купа</a>
+                                                            <a class="level1" href="index.php?p=manager_tourney_details_form.php&tour_id=2">Световна лига</a>
+                                                            <a class="level1" href="index.php?p=manager_tourney_details_form.php&tour_id=21">КННК</a>
+                                                            <a class="level1" href="index.php?p=manager_league_sponsors.inc">Спонсор</a>
+                                                            <a class="level1" href="index.php?p=sponsor_betting_office.php">Букмейкърски пункт</a>
+                                                        </div>
+                                                                    <a data-submenu="submmuzstvo" class=" dropdown-btn "  onclick="return false;" href="index.php?smenu=mmuzstvo">Отбор</a>
+                                                    <div class="sub  submmuzstvo">
+                                                            <a class="level1" href="index.php?p=manager_news.php">Новини</a>
+                                                            <a class="level1" href="index.php?p=manager_summary.php">Инфо</a>
+                                                            <a class="level1" href="index.php?p=manager_calendar.php">Календар</a>
+                                                            <a class="level1" href="index.php?p=manager_match_last.php">Последен мач</a>
+                                                            <a class="level1" href="index.php?p=manager_tactics_form.php">Настройки за мача</a>
+                                                            <a class="level1" href="index.php?p=manager_stadium.inc">Стадион</a>
+                                                            <a class="level1" href="index.php?p=manager_finance_report.inc">Финанси</a>
+                                                            <a class="level1" href="index.php?p=manager_scouting_form.php">Скаутски отдел</a>
+                                                            <a class="level1" href="index.php?p=sponsor_teams_statistics.php">Статистика</a>
+                                                            <a class="level1" href="index.php?p=manager_challenges_form.php">Приятелски мачове (2)</a>
+                                                            <a class="level1" href="index.php?p=manager_youth_school_form.php">Младежка школа (1)</a>
+                                                            <a class="level1" href="index.php?p=manager_top_teams_league.php">Топ 16</a>
+                                                        </div>
+                                                                    <a data-submenu="submhraci" class=" dropdown-btn "  onclick="return false;" href="index.php?smenu=mhraci">Играчи</a>
+                                                    <div class="sub  submhraci">
+                                                            <a class="level1" href="index.php?p=manager_lines_lineup_form_new.php">Състав</a>
+                                                            <a class="level1" href="index.php?p=manager_training_form1.php">Тренировка</a>
+                                                            <a class="level1" href="index.php?p=manager_training_schedules_form.php">Планове</a>
+                                                            <a class="level1" href="index.php?p=manager_team_players.php">Играчи</a>
+                                                            <a class="level1" href="index.php?p=manager_team_statistics.php">Статистика</a>
+                                                            <a class="level1" href="index.php?p=manager_player_market_form.php">Пазар</a>
+                                                            <a class="level1" href="index.php?p=manager_jersey.inc">Фланелка</a>
+                                                            <a class="level1" href="index.php?p=manager_stars_form.php">Звезди</a>
+                                                            <a class="level1" href="index.php?p=manager_regeneration.inc">Лекар</a>
+                                                            <a class="level1" href="index.php?p=sponsor_tracking_form.php&action=players">Проследяване</a>
+                                                            <a class="level1" href="index.php?p=manager_top_salary.php">Топ 10</a>
+                                                        </div>
+                                                                    <a data-submenu="sub" class=""  href="index.php?index.php&p=public_support.inc"><span style='color:#d07347;'>За спонсорския пакет</span></a>
+                                                                    <a data-submenu="submnational" class=" dropdown-btn "  onclick="return false;" href="index.php?smenu=mnational">Национален</a>
+                                                    <div class="sub  submnational">
+                                                            <a class="level1" href="index.php?p=manager_national_teams_list.php">Отбори</a>
+                                                            <a class="level1" href="index.php?p=manager_national_election.php">Избори</a>
+                                                            <a class="level1" href="index.php?p=manager_national_matches.php">Мачове</a>
+                                                            <a class="level1" href="index.php?p=manager_national_wc.php">Световно първенство</a>
+                                                        </div>
+                                                                    <a data-submenu="submmanazer" class=" dropdown-btn "  onclick="return false;" href="index.php?smenu=mmanazer">Мениджър</a>
+                                                    <div class="sub  submmanazer">
+                                                            <a class="level1" href="index.php?p=manager_settings_form.php">Настройки</a>
+                                                            <a class="level1" href="index.php?p=manager_manager_info.php&id=53589">Инфо</a>
+                                                            <a class="level1" href="index.php?p=sponsor_multiteam.inc"><span style='color:#d07347;'><b>B/U23 отбор</b></span></a>
+                                                            <a class="level1" href="index.php?p=sponsor_main_form.php">Спонсор</a>
+                                                            <a class="level1" href="index.php?p=manager_achievements.inc&action=current">Задачи</a>
+                                                            <a class="level1" href="index.php?p=public_managers_statistics.php">Топ</a>
+                                                            <a class="level1" href="index.php?p=public_hall_of_fame.php">Зала на славата</a>
+                                                            <a class="level1" href="index.php?p=manager_punishments_list.php">Наказания</a>
+                                                        </div>
+                                                                    <a data-submenu="sub" class=""  href="index.php?index.php&p=security_logoff.php">Изход</a>
+                                                                    <a data-submenu="submeditor" class=""  href="index.php?smenu=meditor">TR</a>
+                                                                
+
+                </nav>
+
+                
+
+            </div>
+
+            <div class="contentCol">
+                                <div class="advTop"></div>
+<br />
+
+<table class="stats" width="100%">
+    <tr class='caption'>
+        <th>
+                                    крайна позиция след редовния сезон
+        </th>
+    </tr>
+</table>
+
+<table class="stats" width="100%" border='0'>
+    <thead>
+        <tr class="thead">
+            <td class="center">Ранг</td>
+                <td class="center">Бонус</td>
+            </tr>
+    </thead>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>1. място </td>            <td class="center"  style='white-space:normal;'>150 650 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>2. място </td>            <td class="center"  style='white-space:normal;'>115 000 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>3. място </td>            <td class="center"  style='white-space:normal;'>92 000 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>4. място </td>            <td class="center"  style='white-space:normal;'>63 250 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>5. място </td>            <td class="center"  style='white-space:normal;'>35 650 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>6. място </td>            <td class="center"  style='white-space:normal;'>26 450 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>7. място </td>            <td class="center"  style='white-space:normal;'>17 250 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>8. място </td>            <td class="center"  style='white-space:normal;'>9 200 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>9. място </td>            <td class="center"  style='white-space:normal;'>5 750 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>10. място </td>            <td class="center"  style='white-space:normal;'>5 750 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>11. място </td>            <td class="center"  style='white-space:normal;'>5 750 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>12. място </td>            <td class="center"  style='white-space:normal;'>5 750 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>13. място </td>            <td class="center"  style='white-space:normal;'>0 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>14. място </td>            <td class="center"  style='white-space:normal;'>0 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>15. място </td>            <td class="center"  style='white-space:normal;'>0 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>16. място </td>            <td class="center"  style='white-space:normal;'>0 </td>        </tr>
+</table>
+<br />
+
+<table class="stats" width="100%">
+    <tr class='caption'>
+        <th>
+                                    промоция в по-горна лига
+        </th>
+    </tr>
+</table>
+
+<table class="stats" width="100%" border='0'>
+    <thead>
+        <tr class="thead">
+            </tr>
+    </thead>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>230 000 000 </td>        </tr>
+</table>
+<br />
+
+<table class="stats" width="100%">
+    <tr class='caption'>
+        <th>
+                                    крайна позиция след плейофите
+        </th>
+    </tr>
+</table>
+
+<table class="stats" width="100%" border='0'>
+    <thead>
+        <tr class="thead">
+            <td class="center">Ранг</td>
+                <td class="center">Бонус</td>
+            </tr>
+    </thead>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>1. място </td>            <td class="center"  style='white-space:normal;'>92 000 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>2. място </td>            <td class="center"  style='white-space:normal;'>46 000 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>3. място </td>            <td class="center"  style='white-space:normal;'>34 500 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>4. място </td>            <td class="center"  style='white-space:normal;'>11 500 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>5. място </td>            <td class="center"  style='white-space:normal;'>0 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>6. място </td>            <td class="center"  style='white-space:normal;'>0 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>7. място </td>            <td class="center"  style='white-space:normal;'>0 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>8. място </td>            <td class="center"  style='white-space:normal;'>0 </td>        </tr>
+</table>
+<br />
+
+<table class="stats" width="100%">
+    <tr class='caption'>
+        <th>
+                                    Статистика - Точки / голове / точки, защитник
+        </th>
+    </tr>
+</table>
+
+<table class="stats" width="100%" border='0'>
+    <thead>
+        <tr class="thead">
+            <td class="center">Ранг</td>
+                <td class="center">Бонус</td>
+                <td class="center">Фенклуб</td>
+            </tr>
+    </thead>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>1. място </td>            <td class="center"  style='white-space:normal;'>1 380 000 </td>            <td class="center"  style='white-space:normal;'>+ 26 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>2. място </td>            <td class="center"  style='white-space:normal;'>1 242 000 </td>            <td class="center"  style='white-space:normal;'>+ 15 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>3. място </td>            <td class="center"  style='white-space:normal;'>1 104 000 </td>            <td class="center"  style='white-space:normal;'>+ 11 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>4. място </td>            <td class="center"  style='white-space:normal;'>966 000 </td>            <td class="center"  style='white-space:normal;'>+ 10 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>5. място </td>            <td class="center"  style='white-space:normal;'>828 000 </td>            <td class="center"  style='white-space:normal;'>+ 9 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>6. място </td>            <td class="center"  style='white-space:normal;'>690 000 </td>            <td class="center"  style='white-space:normal;'>+ 8 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>7. място </td>            <td class="center"  style='white-space:normal;'>552 000 </td>            <td class="center"  style='white-space:normal;'>+ 8 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>8. място </td>            <td class="center"  style='white-space:normal;'>414 000 </td>            <td class="center"  style='white-space:normal;'>+ 7 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>9. място </td>            <td class="center"  style='white-space:normal;'>276 000 </td>            <td class="center"  style='white-space:normal;'>+ 7 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>10. място </td>            <td class="center"  style='white-space:normal;'>138 000 </td>            <td class="center"  style='white-space:normal;'>+ 7 </td>        </tr>
+</table>
+<br />
+
+<table class="stats" width="100%">
+    <tr class='caption'>
+        <th>
+                                    Статистика - Най-добри вратари
+        </th>
+    </tr>
+</table>
+
+<table class="stats" width="100%" border='0'>
+    <thead>
+        <tr class="thead">
+            <td class="center">Ранг</td>
+                <td class="center">Бонус</td>
+                <td class="center">Фенклуб</td>
+            </tr>
+    </thead>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>1. място </td>            <td class="center"  style='white-space:normal;'>2 070 000 </td>            <td class="center"  style='white-space:normal;'>+ 26 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>2. място </td>            <td class="center"  style='white-space:normal;'>1 863 000 </td>            <td class="center"  style='white-space:normal;'>+ 15 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>3. място </td>            <td class="center"  style='white-space:normal;'>1 656 000 </td>            <td class="center"  style='white-space:normal;'>+ 11 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>4. място </td>            <td class="center"  style='white-space:normal;'>1 449 000 </td>            <td class="center"  style='white-space:normal;'>+ 10 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>5. място </td>            <td class="center"  style='white-space:normal;'>1 242 000 </td>            <td class="center"  style='white-space:normal;'>+ 9 </td>        </tr>
+</table>
+<br />
+
+<table class="stats" width="100%">
+    <tr class='caption'>
+        <th>
+                                    Национална купа
+        </th>
+    </tr>
+</table>
+
+<table class="stats" width="100%" border='0'>
+    <thead>
+        <tr class="thead">
+            <td class="center">Ранг</td>
+                <td class="center">Бонус</td>
+            </tr>
+    </thead>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>1. място </td>            <td class="center"  style='white-space:normal;'>50 000 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>2. място </td>            <td class="center"  style='white-space:normal;'>37 500 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>3. място </td>            <td class="center"  style='white-space:normal;'>25 000 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>4. място </td>            <td class="center"  style='white-space:normal;'>12 500 000 </td>        </tr>
+</table>
+<br />
+
+<table class="stats" width="100%">
+    <tr class='caption'>
+        <th>
+                                    Купа на носителите на национални купи
+        </th>
+    </tr>
+</table>
+
+<table class="stats" width="100%" border='0'>
+    <thead>
+        <tr class="thead">
+            <td class="center">Ранг</td>
+                <td class="center">Бонус</td>
+            </tr>
+    </thead>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>1. място </td>            <td class="center"  style='white-space:normal;'>100 000 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>2. място </td>            <td class="center"  style='white-space:normal;'>75 000 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>3. място </td>            <td class="center"  style='white-space:normal;'>50 000 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>4. място </td>            <td class="center"  style='white-space:normal;'>25 000 000 </td>        </tr>
+</table>
+<br />
+
+<table class="stats" width="100%">
+    <tr class='caption'>
+        <th>
+                                    Световна лига
+        </th>
+    </tr>
+</table>
+
+<table class="stats" width="100%" border='0'>
+    <thead>
+        <tr class="thead">
+            <td class="center">Ранг</td>
+                <td class="center">Бонус</td>
+            </tr>
+    </thead>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>1. място </td>            <td class="center"  style='white-space:normal;'>250 000 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>2. място </td>            <td class="center"  style='white-space:normal;'>150 000 000 </td>        </tr>
+    <tr class="">
+            <td class="center"  style='white-space:normal;'>3. място </td>            <td class="center"  style='white-space:normal;'>100 000 000 </td>        </tr>
+    <tr class="odd">
+            <td class="center"  style='white-space:normal;'>4. място </td>            <td class="center"  style='white-space:normal;'>50 000 000 </td>        </tr>
+</table>
+</div>
+
+<div class="rightCol">
+            <!-- begin sidebar -->
+        <div id="subsidebar">
+            <div class="block first">
+    <h3>Ръководство</h3>
+        <p>
+<b>Имате въпроси??</b>
+<br />
+Нуждаете се от помощ?
+<br />
+Попитайте по-опитните в Hockey Arena:
+<br />
+<a href='index.php?p=helpers.inc'><b>Продължи</b></a>
+            </p>
+    </div>
+<div class="block">
+    <h3 style="white-space: nowrap">TOП ЛИГИ</h3>
+    <table width='95%' class='sidebar'>
+        <tbody>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat3.gif"> <a href="index.php?p=public_standings.inc&nationality_id=3&league_nogrp=21">FIN II.1</a></td>
+                    <td>88%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat1.gif"> <a href="index.php?p=public_standings.inc&nationality_id=1&league_nogrp=45">SVK IV.5</a></td>
+                    <td>85%</td>
+                </tr>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat1.gif"> <a href="index.php?p=public_standings.inc&nationality_id=1&league_nogrp=41">SVK IV.1</a></td>
+                    <td>81%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat3.gif"> <a href="index.php?p=public_standings.inc&nationality_id=3&league_nogrp=46">FIN IV.6</a></td>
+                    <td>81%</td>
+                </tr>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat2.gif"> <a href="index.php?p=public_standings.inc&nationality_id=2&league_nogrp=510">CZE V.10</a></td>
+                    <td>79%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat2.gif"> <a href="index.php?p=public_standings.inc&nationality_id=2&league_nogrp=53">CZE V.3</a></td>
+                    <td>79%</td>
+                </tr>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat1.gif"> <a href="index.php?p=public_standings.inc&nationality_id=1&league_nogrp=514">SVK V.14</a></td>
+                    <td>79%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat13.gif"> <a href="index.php?p=public_standings.inc&nationality_id=13&league_nogrp=11">POL I.1</a></td>
+                    <td>78%</td>
+                </tr>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat28.gif"> <a href="index.php?p=public_standings.inc&nationality_id=28&league_nogrp=21">KZK II.1</a></td>
+                    <td>76%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat2.gif"> <a href="index.php?p=public_standings.inc&nationality_id=2&league_nogrp=57">CZE V.7</a></td>
+                    <td>76%</td>
+                </tr>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat23.gif"> <a href="index.php?p=public_standings.inc&nationality_id=23&league_nogrp=21">AUS II.1</a></td>
+                    <td>76%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat2.gif"> <a href="index.php?p=public_standings.inc&nationality_id=2&league_nogrp=47">CZE IV.7</a></td>
+                    <td>75%</td>
+                </tr>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat15.gif"> <a href="index.php?p=public_standings.inc&nationality_id=15&league_nogrp=11">FRA I.1</a></td>
+                    <td>75%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat3.gif"> <a href="index.php?p=public_standings.inc&nationality_id=3&league_nogrp=43">FIN IV.3</a></td>
+                    <td>75%</td>
+                </tr>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat1.gif"> <a href="index.php?p=public_standings.inc&nationality_id=1&league_nogrp=22">SVK II.2</a></td>
+                    <td>75%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat1.gif"> <a href="index.php?p=public_standings.inc&nationality_id=1&league_nogrp=43">SVK IV.3</a></td>
+                    <td>75%</td>
+                </tr>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat55.gif"> <a href="index.php?p=public_standings.inc&nationality_id=55&league_nogrp=11">PER I.1</a></td>
+                    <td>75%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat2.gif"> <a href="index.php?p=public_standings.inc&nationality_id=2&league_nogrp=48">CZE IV.8</a></td>
+                    <td>75%</td>
+                </tr>
+            <tr>
+                    <td><img src="https://www.hockeyarena.net/pics/nat2.gif"> <a href="index.php?p=public_standings.inc&nationality_id=2&league_nogrp=44">CZE IV.4</a></td>
+                    <td>74%</td>
+                </tr>
+            <tr class="odd">
+                    <td><img src="https://www.hockeyarena.net/pics/nat2.gif"> <a href="index.php?p=public_standings.inc&nationality_id=2&league_nogrp=22">CZE II.2</a></td>
+                    <td>74%</td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+        </div>
+        <!-- end sidebar -->
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+
+</body>
+
+</html><style>
+    
+    .footer {
+        font-size: 12px;
+        background-color: #10182d;
+        border-top: 1px solid #495867;
+        color: #dfe1df;
+        text-align: center;
+        /*margin: 30px;*/
+    }
+    .footer a {
+        color: #dfe1df;
+    }
+    .languages {
+        margin-top: 10px;
+    }
+    .fLinks {
+        margin-top: 10px;
+    }
+    
+</style>
+<footer class="footer">
+
+    <div class="footerlinks">
+
+        
+        <div class="copyright">
+            <table class='copyright' border='0' style='margin: 7px auto 10px auto;'><tr>
+<td ><a href='index.php?p=payment/main.inc&action=privacy-policy'>Privacy Policy</a><br><a href='index.php?p=public_rules_new.php
+'>Terms of Service</a><br><a href='index.php?p=public_conditions.php'>Refund Policy</a></td>
+<td >© 2003 - 2025 ARENA ONLINE, s.r.o. <br /><span class='version'>version 5.996</span></td>
+<td >support@hockeyarena.net</td>
+</tr></table>
+        </div>
+
+        <div class="fLinks">
+            <a href="http://www.opensubtitles.org" title="Download Subtitles from OpenSubtitles.org" >Movie Subtitles</a>
+        </div>
+
+        <br><br>
+                    <div style='width: 100vw; overflow: auto; text-align: left'></div>
+        
+    </div>
+</footer>
+
