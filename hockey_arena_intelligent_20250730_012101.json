@@ -1,0 +1,46 @@
+{
+  "team_info": {},
+  "players": [],
+  "youth_players": [],
+  "market_data": [],
+  "finances": {},
+  "tactics": {},
+  "training": {},
+  "matches": [],
+  "standings": {},
+  "statistics": {},
+  "ai_analysis": {
+    "timestamp": "2025-07-30T01:21:01.034890",
+    "team_analysis": {
+      "strengths": [],
+      "weaknesses": [],
+      "position_analysis": {},
+      "age_analysis": {},
+      "overall_rating": 0.0
+    },
+    "transfer_opportunities": [],
+    "training_plan": {
+      "priorities": [],
+      "weekly_schedule": {
+        "Понеделник": "Кардио тренировка (SPE)",
+        "Вторник": "Техническа подготовка (PAS)",
+        "Сряда": "Почивка",
+        "Четвъртък": "Силова тренировка (STR)",
+        "Петък": "Тактическа подготовка",
+        "Събота": "Подготовка за мач",
+        "Неделя": "Мач или почивка"
+      },
+      "focus_areas": [],
+      "long_term_goals": []
+    },
+    "financial_health": {},
+    "tactical_suggestions": [],
+    "overall_recommendations": [
+      "🔄 Приоритет: Подобряване на качеството на отбора"
+    ]
+  },
+  "recommendations": [],
+  "transfer_targets": [],
+  "tactical_suggestions": [],
+  "training_plan": {}
+}
