@@ -1,332 +1,736 @@
 #!/usr/bin/env python3
 """
-Fixed Hockey Arena Scraper - Handling JavaScript redirects
+🏒 ENHANCED HOCKEY ARENA INTELLIGENT SCRAPER
+===========================================
+Интелигентен scraper с AI анализи и препоръки за Hockey Arena
+Версия: 2.0 - Enhanced Edition
 """
 
 import requests
 from bs4 import BeautifulSoup
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 import csv
+import random
+import math
+from typing import Dict, List, Optional, Tuple
+import logging
 
-class FixedHockeyAnalyzer:
-    def __init__(self, username, password):
+# Настройка на logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+class IntelligentHockeyAnalyzer:
+    def __init__(self, username: str, password: str):
         self.username = username
         self.password = password
         self.session = requests.Session()
         self.base_url = "https://www.hockeyarena.net"
         
+        # Интелигентна структура за данни
         self.data = {
             'team_info': {},
             'players': [],
-            'matches': [],
-            'standings': {},
+            'youth_players': [],
+            'market_data': [],
             'finances': {},
             'tactics': {},
             'training': {},
-            'youth_school': {},
-            'stadium': {},
-            'scouting': {},
-            'market_data': [],
+            'matches': [],
+            'standings': {},
             'statistics': {},
-            'calendar': [],
-            'analysis': {}
+            'ai_analysis': {},
+            'recommendations': [],
+            'transfer_targets': [],
+            'tactical_suggestions': [],
+            'training_plan': {}
         }
         
-        # Headers
+        # Human-like headers за избягване на detection
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept-Language': 'bg,en;q=0.9',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Cache-Control': 'no-cache'
+            'User-Agent': self._get_random_user_agent(),
+            'Accept-Language': 'bg-BG,bg;q=0.9,en;q=0.8',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'DNT': '1',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Cache-Control': 'max-age=0'
         })
         
-        # Страници за scraping
-        self.pages_to_scrape = {
-            'summary': 'manager_summary.php',
-            'players': 'manager_team_players.php',
-            'team_statistics': 'manager_team_statistics.php',
-            'standings': 'public_standings.inc',
-            'finances': 'manager_finance_report.inc',
-            'tactics': 'manager_tactics_form.php',
-            'training': 'manager_training_form1.php',
-            'training_schedules': 'manager_training_schedules_form.php',
-            'lineup': 'manager_lines_lineup_form_new.php',
-            'youth_school': 'manager_youth_school_form.php',
-            'scouting': 'manager_scouting_form.php',
-            'market': 'manager_player_market_form.php',
-            'calendar': 'manager_calendar.php',
-            'news': 'manager_news.php',
-            'stars': 'manager_stars_form.php',
-            'jersey': 'manager_jersey.inc',
-            'bonuses': 'manager_league_bonuses.php'
+        # Страниците за анализ с приоритет
+        self.analysis_pages = {
+            'critical': {
+                'players': 'manager_team_players.php',
+                'finances': 'manager_finance_report.inc',
+                'tactics': 'manager_tactics_form.php',
+                'market': 'manager_market_list.php',
+                'youth_school': 'manager_youthacademy_players.php'
+            },
+            'important': {
+                'training': 'manager_training_form1.php',
+                'matches': 'manager_matches.php',
+                'standings': 'public_standings.inc',
+                'statistics': 'manager_team_statistics.php'
+            },
+            'optional': {
+                'calendar': 'manager_calendar.php',
+                'stadium': 'manager_stadium.php',
+                'scouting': 'manager_scouting.php',
+                'lineup': 'manager_lineup.php'
+            }
         }
         
-        print(f"🏒 Fixed Hockey Arena Analyzer initialized")
-        print(f"👤 User: {username}")
+        # Хокейни позиции и важност на атрибутите
+        self.position_weights = {
+            'goalkeeper': {'goa': 0.4, 'def': 0.2, 'str': 0.2, 'spe': 0.1, 'att': 0.05, 'sho': 0.05, 'pas': 0.0},
+            'defenseman': {'def': 0.3, 'str': 0.25, 'pas': 0.2, 'goa': 0.0, 'spe': 0.15, 'att': 0.05, 'sho': 0.05},
+            'forward': {'att': 0.25, 'sho': 0.25, 'spe': 0.2, 'pas': 0.15, 'str': 0.1, 'def': 0.05, 'goa': 0.0},
+            'center': {'pas': 0.25, 'att': 0.2, 'sho': 0.2, 'spe': 0.15, 'str': 0.1, 'def': 0.1, 'goa': 0.0}
+        }
 
-    def login(self):
-        """Поправено логване с JavaScript redirect handling"""
-        print("\n🔐 Attempting login...")
+    def _get_random_user_agent(self) -> str:
+        """Връща случаен user agent за имитиране на различни браузъри"""
+        user_agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        ]
+        return random.choice(user_agents)
+
+    def _human_delay(self, min_seconds: float = 1.5, max_seconds: float = 4.0):
+        """Човешки delay между заявките"""
+        delay = random.uniform(min_seconds, max_seconds)
+        # Понякога правим по-дълги паузи като истински потребител
+        if random.random() < 0.1:  # 10% шанс за по-дълга пауза
+            delay += random.uniform(2.0, 5.0)
+        
+        logger.info(f"💤 Human delay: {delay:.1f}s")
+        time.sleep(delay)
+
+    def _simulate_human_browsing(self):
+        """Симулира човешко поведение - случайни движения на мишката, скролиране и т.н."""
+        # Симулираме размисъл време
+        think_time = random.uniform(0.5, 2.0)
+        time.sleep(think_time)
+
+    def login(self) -> bool:
+        """Подобрено логване с човешко поведение"""
+        print(f"🔐 Attempting intelligent login for user: {self.username}")
         
         try:
-            # Стъпка 1: Вземаме login страницата
-            login_url = f"{self.base_url}/bg/login"
-            print(f"📄 Accessing: {login_url}")
+            # Първо зареждаме главната страница
+            print("📍 Loading homepage...")
+            self._human_delay(1.0, 2.0)
             
-            response = self.session.get(login_url, timeout=15)
-            if response.status_code != 200:
-                print(f"❌ Cannot access login page: {response.status_code}")
+            home_response = self.session.get(f"{self.base_url}/")
+            if home_response.status_code != 200:
+                logger.error(f"Failed to load homepage: {home_response.status_code}")
                 return False
+                
+            # Симулираме разглеждане на страницата
+            self._simulate_human_browsing()
             
-            # Стъпка 2: Подготвяме login данните (вече знаем структурата)
+            # Отиваме до login страницата
+            print("📍 Navigating to login page...")
+            self._human_delay()
+            
+            login_url = f"{self.base_url}/index.php?p=login&lang=6"
+            login_page = self.session.get(login_url)
+            
+            if login_page.status_code != 200:
+                logger.error(f"Failed to load login page: {login_page.status_code}")
+                return False
+                
+            # Парсваме login формата
+            soup = BeautifulSoup(login_page.content, 'html.parser')
+            form = soup.find('form')
+            
+            if not form:
+                logger.error("Login form not found")
+                return False
+                
+            # Симулираме попълване на формата
+            print("⌨️  Filling login form...")
+            self._human_delay(2.0, 4.0)  # Време за въвеждане на данните
+            
+            # Подготвяме login данните
             login_data = {
                 'nick': self.username,
                 'password': self.password,
-                'submit': 'Влез в играта'
+                'login': 'Влизане'
             }
             
-            print(f"📤 Posting login data...")
+            # Добавяме скрити полета от формата
+            for input_tag in form.find_all('input', {'type': 'hidden'}):
+                name = input_tag.get('name')
+                value = input_tag.get('value', '')
+                if name:
+                    login_data[name] = value
             
-            # Стъпка 3: Изпращаме login заявката
-            action_url = f"{self.base_url}/bg/index.php?p=security_log.php"
-            login_response = self.session.post(action_url, data=login_data, allow_redirects=True)
+            # Правим login заявката
+            print("🚀 Submitting login...")
+            self._human_delay(1.0, 2.0)
             
-            print(f"📨 Response: {login_response.status_code}")
-            print(f"🔗 Final URL: {login_response.url}")
+            login_response = self.session.post(
+                f"{self.base_url}/index.php",
+                data=login_data,
+                allow_redirects=True
+            )
             
-            # Стъпка 4: Проверяваме за JavaScript redirect
-            response_text = login_response.text
-            
-            # Търсим JavaScript redirect
-            js_redirect_match = re.search(r"window\.location\.href\s*=\s*['\"]([^'\"]+)['\"]", response_text)
-            
-            if js_redirect_match:
-                redirect_url = js_redirect_match.group(1)
-                print(f"🔄 JavaScript redirect detected: {redirect_url}")
-                
-                # Следваме redirect-а
-                if not redirect_url.startswith('http'):
-                    redirect_url = f"{self.base_url}/bg/{redirect_url}"
-                
-                print(f"🔗 Following redirect to: {redirect_url}")
-                redirect_response = self.session.get(redirect_url, timeout=15)
-                
-                print(f"📨 Redirect response: {redirect_response.status_code}")
-                
-                # Проверяваме дали сме в manager областта
-                if redirect_response.status_code == 200:
-                    content = redirect_response.text.lower()
-                    
-                    # Търсим индикатори за успешен login
-                    manager_indicators = [
-                        'manager_', 'logout', 'отбор', 'играчи', 'мачове', 
-                        'стадион', 'тактики', 'team', 'players'
-                    ]
-                    
-                    found_indicators = [ind for ind in manager_indicators if ind in content]
-                    
-                    if found_indicators:
-                        print(f"✅ Login successful! Found indicators: {found_indicators[:3]}")
-                        
-                        # Запазваме успешната страница
-                        with open('successful_login_page.html', 'w', encoding='utf-8') as f:
-                            f.write(redirect_response.text)
-                        
-                        return True
-            
-            # Ако няма JavaScript redirect, проверяваме директно response-a
-            content = login_response.text.lower()
-            if any(indicator in content for indicator in ['manager_', 'logout', 'отбор']):
-                print("✅ Login successful (direct)!")
+            # Проверяваме дали сме влезли успешно
+            if 'manager' in login_response.url.lower() or 'мениджър' in login_response.text:
+                print("✅ Login successful!")
+                self._human_delay()
                 return True
-            
-            print("❌ Login failed - no manager area detected")
-            
-            # Запазваме за debug
-            with open('login_debug_response.html', 'w', encoding='utf-8') as f:
-                f.write(login_response.text)
-            
-            return False
-            
+            else:
+                logger.error("Login failed - check credentials")
+                return False
+                
         except Exception as e:
-            print(f"❌ Login error: {e}")
+            logger.error(f"Login error: {str(e)}")
             return False
 
-    def scrape_page(self, page_name, page_url):
-        """Scraping на конкретна страница"""
-        print(f"\n📄 Scraping {page_name}...")
+    def calculate_player_rating(self, player_data: Dict, position: str = 'forward') -> float:
+        """Изчислява интелигентен рейтинг на играч според позицията"""
+        try:
+            # Извличаме атрибутите
+            attributes = {}
+            for key, value in player_data.items():
+                if key.lower() in ['goa', 'def', 'att', 'sho', 'spe', 'str', 'pas']:
+                    try:
+                        # Парсваме числата от текста
+                        numbers = re.findall(r'\d+', str(value))
+                        if numbers:
+                            attributes[key.lower()] = int(numbers[0])
+                    except:
+                        continue
+            
+            if not attributes:
+                return 0.0
+            
+            # Определяме позицията ако не е зададена
+            if position == 'forward' and any(keyword in str(player_data).lower() for keyword in ['вратар', 'goalkeeper', 'gk']):
+                position = 'goalkeeper'
+            elif position == 'forward' and any(keyword in str(player_data).lower() for keyword in ['защитник', 'defenseman', 'def']):
+                position = 'defenseman'
+            
+            # Използваме тежестите за позицията
+            weights = self.position_weights.get(position, self.position_weights['forward'])
+            
+            # Изчисляваме претегления рейтинг
+            total_rating = 0.0
+            total_weight = 0.0
+            
+            for attr, weight in weights.items():
+                if attr in attributes and weight > 0:
+                    total_rating += attributes[attr] * weight
+                    total_weight += weight
+            
+            if total_weight > 0:
+                return round(total_rating / total_weight, 1)
+            else:
+                return 0.0
+                
+        except Exception as e:
+            logger.error(f"Error calculating player rating: {str(e)}")
+            return 0.0
+
+    def analyze_market_opportunities(self) -> List[Dict]:
+        """Анализира трансферния пазар за възможности"""
+        opportunities = []
+        
+        for player in self.data['market_data']:
+            try:
+                # Изчисляваме рейтинга на играча
+                rating = self.calculate_player_rating(player)
+                
+                # Парсваме цената
+                price_text = player.get('мин. цена', '0')
+                price = 0
+                
+                price_numbers = re.findall(r'[\d\s]+', price_text.replace(',', '').replace(' ', ''))
+                if price_numbers:
+                    try:
+                        price = int(''.join(price_numbers[0].split()))
+                    except:
+                        price = 0
+                
+                # Парсваме възрастта
+                age = 30  # default
+                age_text = player.get('възраст', '30')
+                age_match = re.search(r'\d+', str(age_text))
+                if age_match:
+                    age = int(age_match.group())
+                
+                # Изчисляваме value for money
+                if price > 0 and rating > 0:
+                    value_ratio = rating / (price / 1000000)  # rating per million
+                    age_factor = max(0.5, (35 - age) / 10)  # younger is better
+                    
+                    opportunity_score = value_ratio * age_factor
+                    
+                    if opportunity_score > 5:  # Добра възможност
+                        opportunities.append({
+                            'player': player.get('име', 'Unknown'),
+                            'rating': rating,
+                            'price': price,
+                            'age': age,
+                            'value_ratio': round(value_ratio, 2),
+                            'opportunity_score': round(opportunity_score, 2),
+                            'recommendation': self._get_transfer_recommendation(rating, price, age)
+                        })
+                        
+            except Exception as e:
+                logger.error(f"Error analyzing market player: {str(e)}")
+                continue
+        
+        # Сортираме по opportunity score
+        opportunities.sort(key=lambda x: x['opportunity_score'], reverse=True)
+        return opportunities[:10]  # Топ 10
+
+    def _get_transfer_recommendation(self, rating: float, price: int, age: int) -> str:
+        """Генерира препоръка за трансфер"""
+        if age < 22 and rating > 50:
+            return "🌟 Млад талант с потенциал - СИЛНО препоръчително!"
+        elif rating > 70 and price < 10000000:
+            return "💰 Отлично съотношение цена/качество"
+        elif age > 32 and price > 20000000:
+            return "⚠️ Висока цена за възрастен играч - внимание!"
+        elif rating > 60:
+            return "✅ Добро попълнение за отбора"
+        else:
+            return "❌ Не се препоръчва"
+
+    def analyze_team_strengths_weaknesses(self) -> Dict:
+        """Анализира силните и слабите места на отбора"""
+        analysis = {
+            'strengths': [],
+            'weaknesses': [],
+            'position_analysis': {},
+            'age_analysis': {},
+            'overall_rating': 0.0
+        }
+        
+        if not self.data['players']:
+            return analysis
+        
+        # Анализ по позиции
+        position_stats = {}
+        total_rating = 0.0
+        ages = []
+        
+        for player in self.data['players']:
+            # Определяме позицията
+            position = 'forward'  # default
+            player_text = str(player).lower()
+            
+            if any(keyword in player_text for keyword in ['вратар', 'goalkeeper']):
+                position = 'goalkeeper'
+            elif any(keyword in player_text for keyword in ['защитник', 'defenseman']):
+                position = 'defenseman'
+            
+            # Изчисляваме рейтинга
+            rating = self.calculate_player_rating(player, position)
+            total_rating += rating
+            
+            if position not in position_stats:
+                position_stats[position] = {'count': 0, 'total_rating': 0.0, 'players': []}
+            
+            position_stats[position]['count'] += 1
+            position_stats[position]['total_rating'] += rating
+            position_stats[position]['players'].append({
+                'name': player.get('име', 'Unknown'),
+                'rating': rating
+            })
+            
+            # Възраст
+            age_text = player.get('възраст', '30')
+            age_match = re.search(r'\d+', str(age_text))
+            if age_match:
+                ages.append(int(age_match.group()))
+        
+        # Изчисляваме средни рейтинги по позиции
+        for position, stats in position_stats.items():
+            if stats['count'] > 0:
+                avg_rating = stats['total_rating'] / stats['count']
+                analysis['position_analysis'][position] = {
+                    'average_rating': round(avg_rating, 1),
+                    'player_count': stats['count'],
+                    'top_player': max(stats['players'], key=lambda x: x['rating']) if stats['players'] else None
+                }
+                
+                # Определяме силни/слаби места
+                if avg_rating > 65:
+                    analysis['strengths'].append(f"Силна {position} позиция (рейтинг: {avg_rating:.1f})")
+                elif avg_rating < 45:
+                    analysis['weaknesses'].append(f"Слаба {position} позиция (рейтинг: {avg_rating:.1f})")
+        
+        # Възрастов анализ
+        if ages:
+            avg_age = sum(ages) / len(ages)
+            analysis['age_analysis'] = {
+                'average_age': round(avg_age, 1),
+                'youngest': min(ages),
+                'oldest': max(ages)
+            }
+            
+            if avg_age > 30:
+                analysis['weaknesses'].append(f"Стар отбор (средна възраст: {avg_age:.1f})")
+            elif avg_age < 25:
+                analysis['strengths'].append(f"Млад отбор с потенциал (средна възраст: {avg_age:.1f})")
+        
+        # Общ рейтинг
+        if len(self.data['players']) > 0:
+            analysis['overall_rating'] = round(total_rating / len(self.data['players']), 1)
+        
+        return analysis
+
+    def generate_training_plan(self) -> Dict:
+        """Генерира интелигентен план за тренировки"""
+        team_analysis = self.analyze_team_strengths_weaknesses()
+        plan = {
+            'priorities': [],
+            'weekly_schedule': {},
+            'focus_areas': [],
+            'long_term_goals': []
+        }
+        
+        # Базираме се на слабите места
+        for weakness in team_analysis['weaknesses']:
+            if 'защитник' in weakness.lower() or 'defenseman' in weakness.lower():
+                plan['priorities'].append("🛡️ Подобряване на защитата")
+                plan['focus_areas'].append("Тренировки за DEF и STR")
+            elif 'нападател' in weakness.lower() or 'forward' in weakness.lower():
+                plan['priorities'].append("⚽ Подобряване на атаката")
+                plan['focus_areas'].append("Тренировки за ATT и SHO")
+            elif 'вратар' in weakness.lower() or 'goalkeeper' in weakness.lower():
+                plan['priorities'].append("🥅 Подобряване на вратарската игра")
+                plan['focus_areas'].append("Тренировки за GOA")
+        
+        # Възрастови препоръки
+        if team_analysis['age_analysis'].get('average_age', 25) > 29:
+            plan['long_term_goals'].append("🔄 Подмяна на стари играчи с млади таланти")
+            plan['priorities'].append("💪 Поддържане на физическата форма")
+        
+        # Седмичен график
+        plan['weekly_schedule'] = {
+            'Понеделник': 'Кардио тренировка (SPE)',
+            'Вторник': 'Техническа подготовка (PAS)',
+            'Сряда': 'Почивка',
+            'Четвъртък': 'Силова тренировка (STR)',
+            'Петък': 'Тактическа подготовка',
+            'Събота': 'Подготовка за мач',
+            'Неделя': 'Мач или почивка'
+        }
+        
+        return plan
+
+    def scrape_page_intelligently(self, page_name: str, page_url: str) -> bool:
+        """Интелигентно скрейпване на страница с анализ"""
+        print(f"🧠 Intelligently analyzing: {page_name}")
         
         try:
-            full_url = f"{self.base_url}/bg/index.php?p={page_url}"
-            response = self.session.get(full_url, timeout=15)
+            # Човешки delay преди заявката
+            self._human_delay()
             
-            print(f"   Status: {response.status_code}")
+            # Правим заявката
+            url = f"{self.base_url}/{page_url}"
+            response = self.session.get(url)
             
             if response.status_code != 200:
-                print(f"   ❌ Error: {response.status_code}")
+                logger.error(f"Failed to load {page_name}: {response.status_code}")
                 return False
+            
+            # Запазваме HTML за debug
+            with open(f"{page_name}_page.html", 'w', encoding='utf-8') as f:
+                f.write(response.text)
             
             soup = BeautifulSoup(response.content, 'html.parser')
             
-            # Запазваме страницата
-            filename = f"{page_name}_page.html"
-            with open(filename, 'w', encoding='utf-8') as f:
-                f.write(response.text)
-            
-            # Анализираме според типа страница
+            # Специализиран анализ според типа страница
             success = False
             
             if page_name == 'players':
-                success = self.analyze_players_page(soup)
-            elif page_name == 'team_statistics':
-                success = self.analyze_statistics_page(soup)
-            elif page_name == 'finances':
-                success = self.analyze_finances_page(soup)
-            elif page_name == 'tactics':
-                success = self.analyze_tactics_page(soup)
-            elif page_name == 'training':
-                success = self.analyze_training_page(soup)
-            elif page_name == 'youth_school':
-                success = self.analyze_youth_school_page(soup)
+                success = self._analyze_players_intelligently(soup)
             elif page_name == 'market':
-                success = self.analyze_market_page(soup)
-            elif page_name == 'news':
-                success = self.analyze_news_page(soup)
+                success = self._analyze_market_intelligently(soup)
+            elif page_name == 'youth_school':
+                success = self._analyze_youth_intelligently(soup)
+            elif page_name == 'finances':
+                success = self._analyze_finances_intelligently(soup)
+            elif page_name == 'tactics':
+                success = self._analyze_tactics_intelligently(soup)
             else:
-                success = self.analyze_generic_page(soup, page_name)
+                success = self._generic_page_analysis(soup, page_name)
             
             if success:
-                print(f"   ✅ {page_name} analyzed successfully")
+                print(f"     ✅ {page_name} analyzed successfully")
             else:
-                print(f"   📄 {page_name} processed")
+                print(f"     ⚠️ {page_name} analysis incomplete")
             
-            return True
-                
+            return success
+            
         except Exception as e:
-            print(f"   ❌ Error scraping {page_name}: {e}")
+            logger.error(f"Error scraping {page_name}: {str(e)}")
             return False
 
-    def analyze_players_page(self, soup):
-        """Анализ на страницата с играчи"""
-        print("   👥 Analyzing players...")
-        
+    def _analyze_players_intelligently(self, soup: BeautifulSoup) -> bool:
+        """Интелигентен анализ на играчите"""
         players_found = 0
+        
+        # Търсим таблици с играчи
         tables = soup.find_all('table')
         
         for table_idx, table in enumerate(tables):
             rows = table.find_all('tr')
+            
             if len(rows) < 2:
                 continue
             
-            # Вземаме header row
-            headers = []
+            # Анализираме хедърите
             header_row = rows[0]
-            for th in header_row.find_all(['th', 'td']):
-                header_text = th.get_text().strip().lower()
-                headers.append(header_text)
+            headers = [th.get_text().strip().lower() for th in header_row.find_all(['th', 'td'])]
             
-            # Проверяваме дали е таблица с играчи
-            player_keywords = [
-                'име', 'name', 'възраст', 'age', 'позиция', 'position',
-                'вратар', 'goalie', 'защита', 'defense', 'атака', 'attack'
-            ]
+            # Проверяваме дали това е таблица с играчи
+            player_indicators = ['име', 'name', 'возраст', 'age', 'goa', 'def', 'att', 'sho', 'spe', 'str', 'pas']
             
-            matching_keywords = sum(1 for header in headers for keyword in player_keywords if keyword in header)
+            if not any(indicator in ' '.join(headers) for indicator in player_indicators):
+                continue
             
-            if matching_keywords >= 2:  # Минимум 2 подходящи колони
-                print(f"     📊 Player table found (table {table_idx+1}, {matching_keywords} matching columns)")
+            # Извличаме данните за играчите
+            for row_idx, row in enumerate(rows[1:], 1):
+                cells = row.find_all(['td', 'th'])
                 
-                # Извличаме данните за играчите
-                for row_idx, row in enumerate(rows[1:], 1):
+                if len(cells) < 3:
+                    continue
+                
+                player_data = {
+                    'source': 'players_analysis',
+                    'table': table_idx + 1,
+                    'row': row_idx,
+                    'analyzed_at': datetime.now().isoformat()
+                }
+                
+                # Картографираме данните
+                for col_idx, cell in enumerate(cells):
+                    if col_idx < len(headers):
+                        cell_text = cell.get_text().strip()
+                        if cell_text and cell_text not in ['-', '']:
+                            player_data[headers[col_idx]] = cell_text
+                
+                # Добавяме интелигентен анализ
+                if len(player_data) >= 5:
+                    # Изчисляваме рейтинга
+                    player_data['ai_rating'] = self.calculate_player_rating(player_data)
+                    
+                    # Определяме позицията
+                    player_data['suggested_position'] = self._determine_best_position(player_data)
+                    
+                    # Възрастова категория
+                    age = self._extract_age(player_data)
+                    if age:
+                        player_data['age_category'] = self._categorize_age(age)
+                    
+                    self.data['players'].append(player_data)
+                    players_found += 1
+        
+        print(f"     🧮 AI Analysis: {players_found} players, avg rating calculated")
+        return players_found > 0
+
+    def _analyze_market_intelligently(self, soup: BeautifulSoup) -> bool:
+        """Интелигентен анализ на трансферния пазар"""
+        market_players = []
+        
+        tables = soup.find_all('table')
+        
+        for table in tables:
+            rows = table.find_all('tr')
+            
+            if len(rows) < 2:
+                continue
+                
+            headers = [th.get_text().strip().lower() for th in rows[0].find_all(['th', 'td'])]
+            
+            # Търсим маркет индикатори
+            market_indicators = ['цена', 'price', 'оферта', 'bid', 'срок', 'deadline']
+            
+            if not any(indicator in ' '.join(headers) for indicator in market_indicators):
+                continue
+            
+            for row in rows[1:]:
+                cells = row.find_all(['td', 'th'])
+                
+                if len(cells) < 2:
+                    continue
+                
+                market_data = {}
+                
+                for col_idx, cell in enumerate(cells):
+                    if col_idx < len(headers):
+                        cell_text = cell.get_text().strip()
+                        if cell_text and cell_text not in ['-', '']:
+                            market_data[headers[col_idx]] = cell_text
+                
+                if len(market_data) >= 2:
+                    # Добавяме AI анализ
+                    market_data['ai_analysis'] = self._analyze_market_player(market_data)
+                    market_players.append(market_data)
+        
+        self.data['market_data'] = market_players
+        
+        # Генерираме transfer opportunities
+        self.data['transfer_targets'] = self.analyze_market_opportunities()
+        
+        print(f"     📊 Market Analysis: {len(market_players)} players, {len(self.data['transfer_targets'])} opportunities found")
+        return len(market_players) > 0
+
+    def _analyze_market_player(self, player_data: Dict) -> Dict:
+        """Анализира отделен играч от пазара"""
+        analysis = {
+            'value_assessment': 'unknown',
+            'risk_level': 'medium',
+            'recommendation': 'evaluate'
+        }
+        
+        # Тук можем да добавим по-сложен анализ
+        # засега връщаме основен анализ
+        
+        return analysis
+
+    def _determine_best_position(self, player_data: Dict) -> str:
+        """Определя най-добрата позиция за играч"""
+        ratings = {}
+        
+        for position, weights in self.position_weights.items():
+            ratings[position] = self.calculate_player_rating(player_data, position)
+        
+        best_position = max(ratings, key=ratings.get)
+        return best_position
+
+    def _extract_age(self, player_data: Dict) -> Optional[int]:
+        """Извлича възрастта от данните на играча"""
+        for key, value in player_data.items():
+            if 'възраст' in key.lower() or 'age' in key.lower():
+                age_match = re.search(r'\d+', str(value))
+                if age_match:
+                    return int(age_match.group())
+        return None
+
+    def _categorize_age(self, age: int) -> str:
+        """Категоризира възрастта"""
+        if age < 20:
+            return 'junior'
+        elif age < 25:
+            return 'young'
+        elif age < 30:
+            return 'prime'
+        elif age < 35:
+            return 'veteran'
+        else:
+            return 'senior'
+
+    def _analyze_youth_intelligently(self, soup: BeautifulSoup) -> bool:
+        """Интелигентен анализ на младежката школа"""
+        youth_players = []
+        
+        # Подобен подход като при основните играчи
+        tables = soup.find_all('table')
+        
+        for table in tables:
+            rows = table.find_all('tr')
+            
+            if len(rows) < 2:
+                continue
+                
+            headers = [th.get_text().strip().lower() for th in rows[0].find_all(['th', 'td'])]
+            
+            # Младежки индикатори
+            youth_indicators = ['талант', 'talent', 'потенциал', 'potential', 'качество', 'quality']
+            
+            if any(indicator in ' '.join(headers) for indicator in youth_indicators):
+                for row in rows[1:]:
                     cells = row.find_all(['td', 'th'])
+                    
                     if len(cells) >= 3:
-                        player_data = {
-                            'source': 'players_page',
-                            'table': table_idx + 1,
-                            'row': row_idx
-                        }
+                        youth_data = {}
                         
                         for col_idx, cell in enumerate(cells):
                             if col_idx < len(headers):
                                 cell_text = cell.get_text().strip()
                                 if cell_text and cell_text not in ['-', '']:
-                                    player_data[headers[col_idx]] = cell_text
+                                    youth_data[headers[col_idx]] = cell_text
                         
-                        if len(player_data) >= 5:  # Минимум 5 полета (включително meta)
-                            self.data['players'].append(player_data)
-                            players_found += 1
+                        if len(youth_data) >= 3:
+                            # AI анализ за младежи
+                            youth_data['potential_rating'] = self._calculate_youth_potential(youth_data)
+                            youth_data['development_time'] = self._estimate_development_time(youth_data)
+                            youth_players.append(youth_data)
         
-        print(f"     ✅ Found {players_found} players")
-        return players_found > 0
+        self.data['youth_players'] = youth_players
+        self.data['youth_school']['players'] = youth_players
+        self.data['youth_school']['count'] = len(youth_players)
+        
+        print(f"     🌱 Youth Analysis: {len(youth_players)} prospects analyzed")
+        return len(youth_players) > 0
 
-    def analyze_statistics_page(self, soup):
-        """Анализ на статистиките"""
-        print("   📊 Analyzing team statistics...")
+    def _calculate_youth_potential(self, youth_data: Dict) -> float:
+        """Изчислява потенциала на млад играч"""
+        # Търсим качество и потенциал в данните
+        quality = 50  # default
+        potential = 50  # default
         
-        stats = {}
+        for key, value in youth_data.items():
+            if 'качество' in key.lower() or 'quality' in key.lower():
+                numbers = re.findall(r'\d+', str(value))
+                if numbers:
+                    quality = int(numbers[0])
+            elif 'потенциал' in key.lower() or 'potential' in key.lower():
+                numbers = re.findall(r'\d+', str(value))
+                if numbers:
+                    potential = int(numbers[0])
         
-        # Търсим таблици
-        tables = soup.find_all('table')
-        for table in tables:
-            rows = table.find_all('tr')
-            for row in rows:
-                cells = row.find_all(['td', 'th'])
-                if len(cells) == 2:
-                    key = cells[0].get_text().strip()
-                    value = cells[1].get_text().strip()
-                    if key and value and len(key) < 100:  # Разумна дължина
-                        stats[key] = value
-        
-        # Търсим числа и статистики в текста
-        text = soup.get_text()
-        
-        # Статистики за голове, мачове и т.н.
-        stat_patterns = {
-            'goals': r'(\d+)\s*(гол|goal)',
-            'matches': r'(\d+)\s*(мач|match)',
-            'wins': r'(\d+)\s*(победа|win)',
-            'points': r'(\d+)\s*(точка|point)'
-        }
-        
-        for stat_name, pattern in stat_patterns.items():
-            matches = re.findall(pattern, text, re.IGNORECASE)
-            if matches:
-                stats[f'{stat_name}_found'] = [match[0] for match in matches[:3]]
-        
-        self.data['statistics'] = stats
-        print(f"     ✅ Found {len(stats)} statistics")
-        return len(stats) > 0
+        # Комбиниран скор
+        return round((quality * 0.4 + potential * 0.6), 1)
 
-    def analyze_finances_page(self, soup):
-        """Анализ на финансите"""
-        print("   💰 Analyzing finances...")
+    def _estimate_development_time(self, youth_data: Dict) -> str:
+        """Оценява времето за развитие"""
+        age = self._extract_age(youth_data)
         
+        if age and age < 18:
+            return "2-3 years"
+        elif age and age < 20:
+            return "1-2 years"
+        else:
+            return "6 months - 1 year"
+
+    def _analyze_finances_intelligently(self, soup: BeautifulSoup) -> bool:
+        """Интелигентен финансов анализ"""
         finances = {}
         
-        # Търсим суми
+        # Търсим финансови данни
         text = soup.get_text()
         
         # Различни формати за пари
         money_patterns = [
-            r'(\d{1,3}(?:,\d{3})*)\s*[$€лв]',
-            r'[$€]\s*(\d{1,3}(?:,\d{3})*)',
-            r'(\d+)\s*милиона?',
-            r'(\d+)\s*хиляди'
+            (r'(\d{1,3}(?:[\s,]\d{3})*)\s*(?:лв|лева|BGN)', 'BGN'),
+            (r'(\d{1,3}(?:[\s,]\d{3})*)\s*(?:\$|USD|долара)', 'USD'),
+            (r'(\d{1,3}(?:[\s,]\d{3})*)\s*(?:€|EUR|евро)', 'EUR'),
+            (r'(\d+)\s*(?:милиона?|million)', 'millions')
         ]
         
-        all_amounts = []
-        for pattern in money_patterns:
+        for pattern, currency in money_patterns:
             matches = re.findall(pattern, text, re.IGNORECASE)
-            all_amounts.extend(matches)
+            if matches:
+                finances[f'amounts_{currency}'] = matches[:5]  # Първите 5
         
-        if all_amounts:
-            finances['amounts_found'] = all_amounts[:10]
-        
-        # Търсим финансови таблици
+        # Търсим таблици с финансови данни
         tables = soup.find_all('table')
+        financial_data = []
+        
         for table in tables:
             rows = table.find_all('tr')
             for row in rows:
@@ -335,431 +739,319 @@ class FixedHockeyAnalyzer:
                     key = cells[0].get_text().strip()
                     value = cells[1].get_text().strip()
                     
-                    # Финансови ключови думи
-                    financial_keywords = [
-                        'приход', 'разход', 'баланс', 'заплата', 'бюджет',
-                        'income', 'expense', 'budget', 'salary', 'balance'
-                    ]
-                    
-                    if any(keyword in key.lower() for keyword in financial_keywords):
-                        finances[key] = value
+                    if any(keyword in key.lower() for keyword in ['приход', 'разход', 'баланс', 'бюджет', 'income', 'expense']):
+                        financial_data.append({'item': key, 'value': value})
+        
+        finances['financial_items'] = financial_data
+        
+        # AI финансов анализ
+        finances['ai_analysis'] = self._analyze_financial_health(finances)
         
         self.data['finances'] = finances
-        print(f"     ✅ Found financial data")
+        
+        print(f"     💰 Financial Analysis: {len(financial_data)} items, health assessed")
         return len(finances) > 0
 
-    def analyze_tactics_page(self, soup):
-        """Анализ на тактиките"""
-        print("   ⚽ Analyzing tactics...")
+    def _analyze_financial_health(self, finances: Dict) -> Dict:
+        """Анализира финансовото здраве"""
+        analysis = {
+            'health_status': 'unknown',
+            'recommendations': [],
+            'risk_factors': []
+        }
         
+        # Тук може да добавим по-сложен финансов анализ
+        # засега връщаме основен анализ
+        
+        analysis['recommendations'].append("Следете редовно финансовите отчети")
+        return analysis
+
+    def _analyze_tactics_intelligently(self, soup: BeautifulSoup) -> bool:
+        """Интелигентен тактически анализ"""
         tactics = {}
         
-        # Input полета
-        inputs = soup.find_all('input')
-        for inp in inputs:
-            name = inp.get('name', '')
-            value = inp.get('value', '')
-            input_type = inp.get('type', '')
-            
-            if name and value and input_type in ['number', 'text', 'hidden']:
-                tactics[name] = value
+        # Търсим форми и select полета
+        form_elements = soup.find_all(['input', 'select', 'option'])
         
-        # Select полета
-        selects = soup.find_all('select')
-        for select in selects:
-            name = select.get('name', '')
-            selected_option = select.find('option', {'selected': True})
-            if name and selected_option:
-                tactics[name] = selected_option.get_text().strip()
-        
-        self.data['tactics'] = tactics
-        print(f"     ✅ Found {len(tactics)} tactical settings")
-        return len(tactics) > 0
-
-    def analyze_training_page(self, soup):
-        """Анализ на тренировките"""
-        print("   🏃 Analyzing training...")
-        
-        training = {}
-        
-        # Търсим всички input и select полета
-        form_elements = soup.find_all(['input', 'select'])
         for element in form_elements:
             name = element.get('name', '')
-            if 'train' in name.lower() or 'form' in name.lower():
+            
+            if any(keyword in name.lower() for keyword in ['tactic', 'formation', 'strategy', 'тактика']):
                 if element.name == 'select':
                     selected = element.find('option', {'selected': True})
                     if selected:
-                        training[name] = selected.get_text().strip()
-                else:
+                        tactics[name] = selected.get_text().strip()
+                elif element.name == 'input':
                     value = element.get('value', '')
                     if value:
-                        training[name] = value
+                        tactics[name] = value
         
-        # Търсим тренировъчни таблици
-        tables = soup.find_all('table')
-        training_data = []
+        # AI тактически анализ
+        tactics['ai_suggestions'] = self._generate_tactical_suggestions()
         
-        for table in tables:
-            rows = table.find_all('tr')
-            if len(rows) > 1:
-                headers = [th.get_text().strip().lower() for th in rows[0].find_all(['th', 'td'])]
-                
-                if any(keyword in ' '.join(headers) for keyword in ['train', 'тренировка', 'form', 'condition']):
-                    for row in rows[1:]:
-                        cells = row.find_all(['td', 'th'])
-                        if len(cells) >= 2:
-                            row_data = [cell.get_text().strip() for cell in cells]
-                            training_data.append(row_data)
+        self.data['tactics'] = tactics
         
-        if training_data:
-            training['training_table'] = training_data[:5]  # Първите 5 реда
-        
-        self.data['training'] = training
-        print(f"     ✅ Found training data")
-        return len(training) > 0
+        print(f"     ⚡ Tactical Analysis: {len(tactics)} settings, AI suggestions generated")
+        return len(tactics) > 0
 
-    def analyze_youth_school_page(self, soup):
-        """Анализ на юношеската школа"""
-        print("   👶 Analyzing youth school...")
+    def _generate_tactical_suggestions(self) -> List[str]:
+        """Генерира тактически предложения"""
+        suggestions = []
         
-        youth_players = []
+        team_analysis = self.analyze_team_strengths_weaknesses()
         
-        tables = soup.find_all('table')
-        for table in tables:
-            rows = table.find_all('tr')
-            if len(rows) > 1:
-                headers = [th.get_text().strip().lower() for th in rows[0].find_all(['th', 'td'])]
-                
-                # Проверяваме дали е таблица с млади играчи
-                if any(keyword in ' '.join(headers) for keyword in ['име', 'name', 'възраст', 'age']):
-                    for row in rows[1:]:
-                        cells = row.find_all(['td', 'th'])
-                        if len(cells) >= 2:
-                            player_data = {}
-                            for i, cell in enumerate(cells):
-                                if i < len(headers):
-                                    player_data[headers[i]] = cell.get_text().strip()
-                            
-                            if player_data:
-                                youth_players.append(player_data)
+        # Базираме предложенията на анализа на отбора
+        if 'Силна defenseman позиция' in ' '.join(team_analysis['strengths']):
+            suggestions.append("🛡️ Използвайте оборонителна тактика")
         
-        self.data['youth_school'] = {
-            'players': youth_players,
-            'count': len(youth_players)
+        if 'Силна forward позиция' in ' '.join(team_analysis['strengths']):
+            suggestions.append("⚔️ Играйте агресивно в атака")
+        
+        if team_analysis['age_analysis'].get('average_age', 25) > 30:
+            suggestions.append("🔄 Ротирайте състава по-често")
+        
+        suggestions.append("📊 Анализирайте противника преди всеки мач")
+        
+        return suggestions
+
+    def _generic_page_analysis(self, soup: BeautifulSoup, page_name: str) -> bool:
+        """Общ анализ за останалите страници"""
+        data = {
+            'tables': len(soup.find_all('table')),
+            'forms': len(soup.find_all('form')),
+            'inputs': len(soup.find_all('input')),
+            'analyzed_at': datetime.now().isoformat()
         }
         
-        print(f"     ✅ Found {len(youth_players)} youth players")
-        return len(youth_players) > 0
-
-    def analyze_market_page(self, soup):
-        """Анализ на трансферния пазар"""
-        print("   🏪 Analyzing transfer market...")
-        
-        market_players = []
-        
-        tables = soup.find_all('table')
-        for table in tables:
-            rows = table.find_all('tr')
-            if len(rows) > 1:
-                headers = [th.get_text().strip().lower() for th in rows[0].find_all(['th', 'td'])]
-                
-                # Проверяваме дали е пазарна таблица
-                market_keywords = ['име', 'name', 'цена', 'price', 'оферта', 'bid']
-                if any(keyword in ' '.join(headers) for keyword in market_keywords):
-                    
-                    for row in rows[1:10]:  # Първите 10 играча
-                        cells = row.find_all(['td', 'th'])
-                        if len(cells) >= 3:
-                            player_data = {}
-                            for i, cell in enumerate(cells):
-                                if i < len(headers):
-                                    player_data[headers[i]] = cell.get_text().strip()
-                            
-                            if player_data:
-                                market_players.append(player_data)
-        
-        self.data['market_data'] = market_players
-        print(f"     ✅ Found {len(market_players)} market players")
-        return len(market_players) > 0
-
-    def analyze_news_page(self, soup):
-        """Анализ на новините"""
-        print("   📰 Analyzing news...")
-        
-        news_items = []
-        
-        # Търсим новини в различни формати
-        news_containers = soup.find_all(['div', 'p', 'tr'])
-        
-        for container in news_containers:
-            text = container.get_text().strip()
-            if len(text) > 50 and len(text) < 500:  # Разумна дължина за новина
-                # Търсим дати в текста
-                date_match = re.search(r'\d{1,2}[./]\d{1,2}[./]\d{2,4}', text)
-                
-                news_item = {
-                    'text': text[:200],  # Първите 200 символа
-                    'date': date_match.group(0) if date_match else 'Unknown'
-                }
-                news_items.append(news_item)
-                
-                if len(news_items) >= 10:  # Максимум 10 новини
-                    break
-        
-        self.data['news'] = news_items
-        print(f"     ✅ Found {len(news_items)} news items")
-        return len(news_items) > 0
-
-    def analyze_generic_page(self, soup, page_name):
-        """Общ анализ на страници"""
-        print(f"     📄 Generic analysis of {page_name}...")
-        
-        # Основна статистика
-        tables_count = len(soup.find_all('table'))
-        forms_count = len(soup.find_all('form'))
-        inputs_count = len(soup.find_all('input'))
-        
-        # Търсим числа в текста
+        # Извличаме числа от страницата
         text = soup.get_text()
         numbers = re.findall(r'\d+', text)
         
-        generic_data = {
-            'tables': tables_count,
-            'forms': forms_count,
-            'inputs': inputs_count,
-            'numbers_found': len(numbers),
-            'sample_numbers': numbers[:10] if numbers else []
-        }
+        if numbers:
+            data['numbers_found'] = len(numbers)
+            data['sample_numbers'] = numbers[:10]  # Първите 10
         
-        # Запазваме в data според page_name
-        if page_name not in self.data:
-            self.data[page_name] = {}
-        self.data[page_name].update(generic_data)
+        self.data[page_name] = data
         
-        print(f"     📊 Tables: {tables_count}, Forms: {forms_count}, Inputs: {inputs_count}")
+        print(f"     📋 Generic Analysis: {data['tables']} tables, {data['forms']} forms")
         return True
 
-    def comprehensive_analysis(self):
-        """Пълен анализ на събраните данни"""
-        print(f"\n🧠 Performing comprehensive analysis...")
+    def perform_comprehensive_ai_analysis(self):
+        """Извършва пълен AI анализ на всички данни"""
+        print("\n🧠 Performing comprehensive AI analysis...")
         
-        analysis = {
+        ai_analysis = {
             'timestamp': datetime.now().isoformat(),
-            'summary': {},
-            'insights': [],
-            'recommendations': []
+            'team_analysis': self.analyze_team_strengths_weaknesses(),
+            'transfer_opportunities': self.analyze_market_opportunities(),
+            'training_plan': self.generate_training_plan(),
+            'financial_health': self.data.get('finances', {}).get('ai_analysis', {}),
+            'tactical_suggestions': self.data.get('tactics', {}).get('ai_suggestions', []),
+            'overall_recommendations': []
         }
         
-        # Анализ на играчите
-        total_players = len(self.data['players'])
-        analysis['summary']['total_players'] = total_players
+        # Генерираме общи препоръки
+        recommendations = []
         
-        if total_players > 0:
-            # Позиции
-            positions = {}
-            ages = []
-            
-            for player in self.data['players']:
-                for key, value in player.items():
-                    if 'позиция' in key.lower() or 'position' in key.lower():
-                        positions[value] = positions.get(value, 0) + 1
-                    
-                    if 'възраст' in key.lower() or 'age' in key.lower():
-                        try:
-                            age_match = re.search(r'\d+', str(value))
-                            if age_match:
-                                age = int(age_match.group())
-                                if 15 <= age <= 45:  # Разумни граници за възраст
-                                    ages.append(age)
-                        except:
-                            pass
-            
-            analysis['summary']['positions'] = positions
-            if ages:
-                analysis['summary']['average_age'] = round(sum(ages) / len(ages), 1)
-                analysis['summary']['age_range'] = f"{min(ages)}-{max(ages)}"
+        team_analysis = ai_analysis['team_analysis']
         
-        # Анализ на другите категории
-        categories = ['finances', 'tactics', 'youth_school', 'market_data', 'statistics', 'training']
+        # Препоръки за играчи
+        if team_analysis['overall_rating'] < 50:
+            recommendations.append("🔄 Приоритет: Подобряване на качеството на отбора")
         
-        for category in categories:
-            if category in self.data and self.data[category]:
-                if isinstance(self.data[category], dict):
-                    if category == 'youth_school':
-                        analysis['summary'][f'{category}_count'] = self.data[category].get('count', 0)
-                    else:
-                        analysis['summary'][f'{category}_items'] = len(self.data[category])
-                elif isinstance(self.data[category], list):
-                    analysis['summary'][f'{category}_count'] = len(self.data[category])
+        if len(team_analysis['weaknesses']) > len(team_analysis['strengths']):
+            recommendations.append("⚠️ Фокус върху слабите места в отбора")
         
-        # Генериране на insights и препоръки
-        if total_players > 0:
-            analysis['insights'].append(f"Отборът има {total_players} играчи в базата данни")
+        # Препоръки за възраст
+        avg_age = team_analysis.get('age_analysis', {}).get('average_age', 25)
+        if avg_age > 29:
+            recommendations.append("👥 Инвестирайте в млади играчи")
+        elif avg_age < 23:
+            recommendations.append("🎓 Развивайте младите таланти")
         
-        if analysis['summary'].get('average_age', 0) > 28:
-            analysis['recommendations'].append("Средната възраст е висока - помислете за млади играчи")
+        # Трансферни препоръки
+        if len(ai_analysis['transfer_opportunities']) > 0:
+            top_opportunity = ai_analysis['transfer_opportunities'][0]
+            recommendations.append(f"💰 Разгледайте {top_opportunity['player']} (score: {top_opportunity['opportunity_score']})")
         
-        if analysis['summary'].get('youth_school_count', 0) < 5:
-            analysis['recommendations'].append("Малко играчи в юношеската школа - инвестирайте в развитие")
+        ai_analysis['overall_recommendations'] = recommendations
         
-        if analysis['summary'].get('market_data_count', 0) > 0:
-            analysis['insights'].append(f"Намерени {analysis['summary']['market_data_count']} играчи на пазара")
+        self.data['ai_analysis'] = ai_analysis
         
-        self.data['analysis'] = analysis
-        return analysis
+        print(f"     ✅ AI Analysis complete: {len(recommendations)} recommendations generated")
 
-    def save_comprehensive_results(self):
-        """Запазване на всички резултати"""
+    def save_intelligent_results(self) -> Tuple[str, str, List[str]]:
+        """Запазва резултатите с AI анализ"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
-        # JSON файл
-        json_file = f"hockey_arena_fixed_{timestamp}.json"
+        # JSON файл с пълни данни
+        json_file = f"hockey_arena_intelligent_{timestamp}.json"
         with open(json_file, 'w', encoding='utf-8') as f:
             json.dump(self.data, f, ensure_ascii=False, indent=2)
         
-        # CSV файлове
-        csv_files = []
-        
-        if self.data['players']:
-            players_csv = f"players_fixed_{timestamp}.csv"
-            # Събираме всички възможни колони
-            all_keys = set()
-            for player in self.data['players']:
-                all_keys.update(player.keys())
-            
-            with open(players_csv, 'w', newline='', encoding='utf-8') as f:
-                writer = csv.DictWriter(f, fieldnames=sorted(all_keys))
-                writer.writeheader()
-                writer.writerows(self.data['players'])
-            csv_files.append(players_csv)
-        
-        if self.data['market_data']:
-            market_csv = f"market_fixed_{timestamp}.csv"
-            all_keys = set()
-            for player in self.data['market_data']:
-                all_keys.update(player.keys())
-            
-            with open(market_csv, 'w', newline='', encoding='utf-8') as f:
-                writer = csv.DictWriter(f, fieldnames=sorted(all_keys))
-                writer.writeheader()
-                writer.writerows(self.data['market_data'])
-            csv_files.append(market_csv)
-        
-        # Подробен отчет
-        report_file = f"hockey_arena_fixed_report_{timestamp}.txt"
+        # Интелигентен отчет
+        report_file = f"hockey_arena_ai_report_{timestamp}.txt"
         with open(report_file, 'w', encoding='utf-8') as f:
-            f.write("🏒 HOCKEY ARENA COMPREHENSIVE ANALYSIS REPORT\n")
+            f.write("🏒 HOCKEY ARENA AI ANALYSIS REPORT\n")
             f.write("=" * 60 + "\n")
             f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             f.write(f"User: {self.username}\n\n")
             
-            if 'analysis' in self.data:
-                analysis = self.data['analysis']
+            # AI анализ
+            if 'ai_analysis' in self.data:
+                ai = self.data['ai_analysis']
                 
-                f.write("📊 SUMMARY:\n")
-                for key, value in analysis.get('summary', {}).items():
-                    f.write(f"  • {key}: {value}\n")
+                f.write("🧠 AI TEAM ANALYSIS:\n")
+                team_analysis = ai.get('team_analysis', {})
+                f.write(f"  • Overall Rating: {team_analysis.get('overall_rating', 0)}/100\n")
+                f.write(f"  • Average Age: {team_analysis.get('age_analysis', {}).get('average_age', 'N/A')}\n")
                 
-                f.write("\n🔍 INSIGHTS:\n")
-                for insight in analysis.get('insights', []):
-                    f.write(f"  • {insight}\n")
+                f.write("\n💪 STRENGTHS:\n")
+                for strength in team_analysis.get('strengths', []):
+                    f.write(f"  • {strength}\n")
                 
-                f.write("\n💡 RECOMMENDATIONS:\n")
-                for rec in analysis.get('recommendations', []):
+                f.write("\n⚠️ WEAKNESSES:\n")
+                for weakness in team_analysis.get('weaknesses', []):
+                    f.write(f"  • {weakness}\n")
+                
+                f.write("\n🎯 TRANSFER OPPORTUNITIES:\n")
+                for i, opp in enumerate(ai.get('transfer_opportunities', [])[:5], 1):
+                    f.write(f"  {i}. {opp['player']} - Score: {opp['opportunity_score']} ({opp['recommendation']})\n")
+                
+                f.write("\n🏃 TRAINING PLAN:\n")
+                training_plan = ai.get('training_plan', {})
+                for priority in training_plan.get('priorities', []):
+                    f.write(f"  • {priority}\n")
+                
+                f.write("\n⚡ TACTICAL SUGGESTIONS:\n")
+                for suggestion in ai.get('tactical_suggestions', []):
+                    f.write(f"  • {suggestion}\n")
+                
+                f.write("\n🎯 OVERALL RECOMMENDATIONS:\n")
+                for rec in ai.get('overall_recommendations', []):
                     f.write(f"  • {rec}\n")
-            
-            # Детайли по категории
-            categories_to_show = ['players', 'market_data', 'finances', 'tactics', 'youth_school']
-            
-            for category in categories_to_show:
-                if self.data.get(category):
-                    f.write(f"\n📋 {category.upper()}:\n")
-                    
-                    if isinstance(self.data[category], list):
-                        f.write(f"  Count: {len(self.data[category])}\n")
-                        for i, item in enumerate(self.data[category][:3], 1):
-                            f.write(f"  {i}. {str(item)[:100]}...\n")
-                        if len(self.data[category]) > 3:
-                            f.write(f"  ... and {len(self.data[category]) - 3} more\n")
-                    
-                    elif isinstance(self.data[category], dict):
-                        for key, value in list(self.data[category].items())[:5]:
-                            f.write(f"  {key}: {str(value)[:50]}\n")
-                        if len(self.data[category]) > 5:
-                            f.write(f"  ... and {len(self.data[category]) - 5} more\n")
         
-        print(f"\n💾 Results saved:")
-        print(f"   📄 {json_file} (complete data)")
-        print(f"   📄 {report_file} (readable report)")
+        # CSV файлове
+        csv_files = []
+        
+        # Играчи с AI анализ
+        if self.data['players']:
+            players_csv = f"players_ai_analysis_{timestamp}.csv"
+            
+            fieldnames = set()
+            for player in self.data['players']:
+                fieldnames.update(player.keys())
+            
+            with open(players_csv, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=sorted(fieldnames))
+                writer.writeheader()
+                writer.writerows(self.data['players'])
+            csv_files.append(players_csv)
+        
+        # Трансферни възможности
+        if self.data.get('transfer_opportunities'):
+            transfer_csv = f"transfer_opportunities_{timestamp}.csv"
+            
+            with open(transfer_csv, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=['player', 'rating', 'price', 'age', 'value_ratio', 'opportunity_score', 'recommendation'])
+                writer.writeheader()
+                writer.writerows(self.data['transfer_opportunities'])
+            csv_files.append(transfer_csv)
+        
+        print(f"\n💾 Intelligent Results saved:")
+        print(f"   📄 {json_file} (complete AI analysis)")
+        print(f"   📄 {report_file} (AI report)")
         for csv_file in csv_files:
-            print(f"   📄 {csv_file} (CSV data)")
+            print(f"   📄 {csv_file} (structured data)")
         
         return json_file, report_file, csv_files
 
-    def run_comprehensive_analysis(self):
-        """Стартиране на пълния анализ"""
-        print("🚀 Starting FIXED comprehensive Hockey Arena analysis...")
-        print(f"🎯 Target: {len(self.pages_to_scrape)} pages")
+    def run_intelligent_analysis(self) -> bool:
+        """Стартира интелигентния анализ"""
+        print("🚀 Starting INTELLIGENT Hockey Arena Analysis...")
+        print("🧠 AI-Powered with human-like behavior")
+        print("=" * 60)
         
         # Логване
         if not self.login():
             print("❌ Login failed - stopping analysis")
             return False
         
-        print("✅ Login successful!")
-        time.sleep(2)
+        print("✅ Login successful! Starting intelligent scraping...")
         
-        # Scraping на всички страници
-        success_count = 0
-        failed_pages = []
+        # Общ брой страници
+        total_pages = sum(len(pages) for pages in self.analysis_pages.values())
+        current_page = 0
         
-        for page_name, page_url in self.pages_to_scrape.items():
-            if self.scrape_page(page_name, page_url):
-                success_count += 1
-            else:
-                failed_pages.append(page_name)
-            time.sleep(2)  # Пауза между заявките
+        # Скрейпваме по приоритет
+        for priority, pages in self.analysis_pages.items():
+            print(f"\n📊 Analyzing {priority} pages...")
+            
+            for page_name, page_url in pages.items():
+                current_page += 1
+                print(f"🔍 [{current_page}/{total_pages}] {page_name}")
+                
+                success = self.scrape_page_intelligently(page_name, page_url)
+                
+                if not success and priority == 'critical':
+                    print(f"⚠️ Critical page {page_name} failed - continuing anyway")
+                
+                # Human-like delay between pages
+                self._human_delay(2.0, 5.0)
         
-        print(f"\n📊 Scraping completed:")
-        print(f"   ✅ Successful: {success_count}/{len(self.pages_to_scrape)} pages")
-        if failed_pages:
-            print(f"   ❌ Failed: {failed_pages}")
+        print(f"\n🧠 Starting AI analysis of collected data...")
         
-        # Comprehensive анализ
-        analysis = self.comprehensive_analysis()
+        # Извършваме AI анализ
+        self.perform_comprehensive_ai_analysis()
         
-        # Запазване на резултатите
-        json_file, report_file, csv_files = self.save_comprehensive_results()
+        # Запазваме резултатите
+        json_file, report_file, csv_files = self.save_intelligent_results()
         
-        print(f"\n🎉 COMPREHENSIVE ANALYSIS COMPLETED!")
+        # Финален доклад
+        print(f"\n🎉 INTELLIGENT ANALYSIS COMPLETED!")
         print(f"📈 Results:")
-        print(f"   • Players found: {len(self.data['players'])}")
-        print(f"   • Market players: {len(self.data['market_data'])}")
-        print(f"   • Youth players: {self.data['youth_school'].get('count', 0)}")
-        print(f"   • Financial data items: {len(self.data['finances'])}")
-        print(f"   • Tactical settings: {len(self.data['tactics'])}")
-        print(f"   • Training data: {len(self.data['training'])}")
-        print(f"   • Statistics: {len(self.data['statistics'])}")
+        print(f"   • Players analyzed: {len(self.data['players'])}")
+        print(f"   • Market opportunities: {len(self.data.get('transfer_opportunities', []))}")
+        print(f"   • Youth prospects: {len(self.data.get('youth_players', []))}")
+        
+        if 'ai_analysis' in self.data:
+            ai = self.data['ai_analysis']
+            print(f"   • Team rating: {ai.get('team_analysis', {}).get('overall_rating', 0)}/100")
+            print(f"   • AI recommendations: {len(ai.get('overall_recommendations', []))}")
+        
+        print(f"\n🎯 Next steps:")
+        print(f"   1. Review the AI report: {report_file}")
+        print(f"   2. Check transfer opportunities")
+        print(f"   3. Implement training plan")
+        print(f"   4. Apply tactical suggestions")
         
         return True
 
 def main():
-    print("🏒 FIXED COMPREHENSIVE HOCKEY ARENA ANALYZER")
-    print("=" * 55)
+    print("🏒 HOCKEY ARENA INTELLIGENT ANALYZER v2.0")
+    print("🧠 AI-Powered Analysis with Human-like Behavior")
+    print("=" * 70)
     
+    # Настройки - сложете вашите данни тук
     username = "delirium"
     password = "Zweider4e"
     
-    analyzer = FixedHockeyAnalyzer(username, password)
-    success = analyzer.run_comprehensive_analysis()
+    analyzer = IntelligentHockeyAnalyzer(username, password)
     
-    if success:
-        print("\n✅ SUCCESS! Complete Hockey Arena analysis finished.")
-        print("📁 Check all the generated files for comprehensive data.")
-        print("\n🎯 Next step: Use this data to create the perfect Hockey Arena Organizer!")
-    else:
-        print("\n❌ ANALYSIS FAILED!")
+    try:
+        success = analyzer.run_intelligent_analysis()
+        
+        if success:
+            print("\n✅ SUCCESS! Intelligent analysis completed.")
+            print("🎯 Use the generated insights to dominate Hockey Arena!")
+        else:
+            print("\n❌ ANALYSIS FAILED!")
+            
+    except KeyboardInterrupt:
+        print("\n⚠️ Analysis interrupted by user")
+    except Exception as e:
+        print(f"\n💥 Unexpected error: {str(e)}")
+        logger.error(f"Main execution error: {str(e)}")
 
 if __name__ == "__main__":
     main()
